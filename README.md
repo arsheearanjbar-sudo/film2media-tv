@@ -2,9 +2,13 @@
 
 A Samsung Tizen TV app for **Film2Media** (`nilfgaard.top`) — browse and play Persian-dubbed / hardsubbed movies and series with the TV remote. No account needed: the app reads the site's public WordPress REST API and plays the direct file links.
 
+## Download
+
+Prebuilt `.wgt` packages are attached to [GitHub Releases](https://github.com/arsheearanjbar-sudo/film2media-tv/releases) — every release is built automatically by the `Release` workflow (Actions tab → Run workflow → pick a tag like `v1.0.0`). Install it with a Samsung certificate as described below.
+
 ## What it does
 
-| Area | |
+| Area | Details |
 |---|---|
 | Home | Latest movies + latest series rows |
 | Movies / Series | Paginated poster grids |
