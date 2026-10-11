@@ -1,6 +1,13 @@
 // Test harness for scrape.js against real page fixtures.
+// Fixtures live in test/fixtures/ (committed, so CI can run); /tmp is a legacy fallback.
 var fs = require('fs');
 var NilfScrape = require(__dirname + '/../js/scrape.js');
+
+function fixture(name) {
+  var repoPath = __dirname + '/fixtures/' + name;
+  if (fs.existsSync(repoPath)) return fs.readFileSync(repoPath, 'utf8');
+  return fs.readFileSync('/tmp/' + name, 'utf8');
+}
 
 var failures = 0;
 function assert(cond, msg) {
@@ -9,7 +16,7 @@ function assert(cond, msg) {
 }
 
 console.log('== movie fixture ==');
-var movieHtml = fs.readFileSync('/tmp/nilf_movie.html', 'utf8');
+var movieHtml = fixture('nilf_movie.html');
 var mv = NilfScrape.parseMovie(movieHtml);
 assert(mv.type === 'movie', 'type is movie');
 assert(mv.groups.length >= 1, 'extracted >=1 quality group (got ' + mv.groups.length + ')');
@@ -25,7 +32,7 @@ assert(g0.section.length > 0, 'section title captured: "' + g0.section + '"');
 assert(g0.quality.length > 0, 'quality label captured: "' + g0.quality + '"');
 
 console.log('== series fixture ==');
-var seriesHtml = fs.readFileSync('/tmp/nilf_series_page.html', 'utf8');
+var seriesHtml = fixture('nilf_series_page.html');
 var sv = NilfScrape.parseSeries(seriesHtml);
 assert(sv.type === 'series', 'type is series');
 assert(sv.groups.length === 3, 'one group per quality (got ' + sv.groups.length + ')');
