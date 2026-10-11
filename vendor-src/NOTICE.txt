@@ -1,0 +1,20 @@
+Vendored third-party code
+=========================
+
+spatial-navigation-core.cjs
+  Source: @noriginmedia/norigin-spatial-navigation-core v4.1.2 (npm)
+  License: MIT — Copyright (c) Norigin Media
+  https://github.com/NoriginMedia/norigin-spatial-navigation
+  Used for TV remote (D-pad) spatial focus navigation. Bundled CJS is wrapped
+  by build.sh together with lodash-shim.js into js/vendor/spatial-navigation.js
+  which exposes window.SpatialNavigation. Unmodified from npm.
+
+lodash-shim.js
+  Written for this project. Implements the 10 lodash-es functions the bundle
+  requires (findKey, sortBy, assign, throttle, filter, first, difference,
+  forEach, debounce, forOwn) so the full lodash-es package is not needed.
+
+Patterns (not code) were also studied from https://github.com/aliir74/30nama-tv
+(spatial-nav init options, right-edge rail menu, red-key debug log, player
+seek UX, on-screen keyboard layouts, tv.sh sign/install flow) and reimplemented
+fresh for this codebase.
