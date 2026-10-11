@@ -1,0 +1,43 @@
+# Release — build film2media-tv.wgt in CI and publish it as a GitHub Release asset.
+#
+# How to use: open the repo's Actions tab → "Release" → "Run workflow" →
+# enter a tag like v1.0.0 → the release is created with film2media-tv.wgt attached.
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build .wgt
+        run: ./build.sh
+
+      - name: Create GitHub Release
+        run: |
+          TAG="${{ inputs.tag }}"
+          gh release create "$TAG" \
+            --title "Film2Media TV $TAG" \
+            --notes "Unofficial Samsung Tizen TV app for Film2Media (nilfgaard.top).
+
+            Install: enable Developer Mode on the TV (Apps → 1 2 3 4 5), create a Samsung
+            certificate containing your TV's DUID, then install the attached .wgt —
+            see README-FA.md for the full Persian guide." \
+            film2media-tv.wgt
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
