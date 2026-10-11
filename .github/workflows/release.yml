@@ -1,7 +1,7 @@
 # Release — build film2media-tv.wgt in CI and publish it as a GitHub Release asset.
 #
 # How to use: open the repo's Actions tab → "Release" → "Run workflow" →
-# enter a tag like v1.0.0 → the release is created with film2media-tv.wgt attached.
+# enter a tag like v1.0.0 → the release is created with the assets attached.
 name: Release
 
 on:
@@ -28,16 +28,25 @@ jobs:
       - name: Build .wgt
         run: bash ./build.sh
 
+      - name: Build versioned source zip
+        run: |
+          TAG="${{ inputs.tag }}"
+          VER="${TAG#v}"
+          ICON_ARG=""
+          [ -f icon.png ] && ICON_ARG="icon.png"
+          zip -qr "film2media-tv-${VER}.zip" config.xml index.html $ICON_ARG css js README.md README-FA.md build.sh -x '*/.*'
+
       - name: Create GitHub Release
         run: |
           TAG="${{ inputs.tag }}"
+          VER="${TAG#v}"
           gh release create "$TAG" \
             --title "Film2Media TV $TAG" \
             --notes "Unofficial Samsung Tizen TV app for Film2Media (nilfgaard.top).
 
-            Install: enable Developer Mode on the TV (Apps → 1 2 3 4 5), create a Samsung
-            certificate containing your TV's DUID, then install the attached .wgt —
-            see README-FA.md for the full Persian guide." \
-            film2media-tv.wgt
+          **Install:** download film2media-tv-${VER}.zip, unzip, then sign it with your own Samsung certificate and install — the steps are in README-FA.md. The zip is unsigned and has no key: Samsung TVs only take apps signed for that TV.
+
+          film2media-tv.wgt is the pre-packaged widget (also unsigned): sign it with your certificate (tizen package -s <profile>) and install." \
+            film2media-tv.wgt "film2media-tv-${VER}.zip"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
