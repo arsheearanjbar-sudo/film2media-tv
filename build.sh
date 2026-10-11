@@ -47,6 +47,10 @@ console.log('  SpatialNavigation loads OK, exports:', Object.keys(SN).slice(0,8)
 
 echo "== 5. package .wgt =="
 rm -f film2media-tv.wgt
-zip -qr film2media-tv.wgt config.xml index.html icon.png css js -x '*/.*'
+# icon.png is a binary asset and may be absent (e.g. CI checkout); zip tolerates that.
+ICON_ARG=""
+[ -f icon.png ] && ICON_ARG="icon.png"
+# shellcheck disable=SC2086
+zip -qr film2media-tv.wgt config.xml index.html $ICON_ARG css js -x '*/.*'
 ls -la film2media-tv.wgt
 echo "BUILD OK"
