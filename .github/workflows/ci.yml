@@ -1,0 +1,25 @@
+# CI — validate, test and package the Tizen app on every push / PR.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build, validate and test
+        run: ./build.sh
+
+      - name: Upload .wgt artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: film2media-tv-wgt
+          path: film2media-tv.wgt
